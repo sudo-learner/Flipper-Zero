@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0a0a0f"/>
+  <rect x="60" y="110" width="392" height="240" rx="24" fill="#13131f" stroke="#00e676" stroke-width="2"/>
+  <rect x="84" y="134" width="280" height="160" rx="12" fill="#060609"/>
+  <text x="224" y="200" text-anchor="middle" font-family="monospace" font-size="28" fill="#00e676">FLIPPER ZERO</text>
+  <text x="224" y="236" text-anchor="middle" font-family="monospace" font-size="20" fill="#4fc3f7">EDU SIMULATOR</text>
+  <text x="256" y="460" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#00e676" font-weight="700">FlipperEdu</text>
+</svg>

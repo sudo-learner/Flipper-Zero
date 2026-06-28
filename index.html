@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flipper Zero — Visual Signal Education | FlipperEdu</title>
+<meta name="description" content="Interactive educational website showing how Flipper Zero wireless modules work with live canvas animations.">
+<meta name="author" content="sudo.learner">
+<meta property="og:title" content="Flipper Zero — Visual Signal Education">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://YOUR-USERNAME.github.io/flipper-edu/">
+<meta property="og:image" content="assets/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Flipper Zero — Visual Signal Education">
+<meta name="twitter:description" content="See exactly how wireless attacks work — live animated signal journey for every Flipper Zero module.">
+<meta name="twitter:image" content="assets/og-image.svg">
+<link rel="apple-touch-icon" href="assets/icon-192.svg">
+<link rel="canonical" href="https://YOUR-USERNAME.github.io/flipper-edu/">
+<link rel="manifest" href="assets/site.webmanifest">
+<meta name="theme-color" content="#00e676">
+<link rel="icon" type="image/svg+xml" href="assets/icon-192.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;--bg2:#10101a;--bg3:#16162a;--card:#13131f;
+  --bdr:rgba(255,255,255,0.08);--bdr2:rgba(255,255,255,0.14);
+  --txt:#e8e8f0;--txt2:#8888aa;--txt3:#555570;
+  --G:#00e676;--B:#4fc3f7;--A:#ffb300;--R:#ff5252;--P:#ce93d8;
+  --fn:'Inter','Segoe UI',sans-serif;--fm:'Fira Code','Cascadia Code',monospace;
+  --r:14px;--rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fn);background:var(--bg);color:var(--txt);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:2rem;text-align:center;}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(79,195,247,0.04)1px,transparent 1px),linear-gradient(90deg,rgba(79,195,247,0.04)1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.hglow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,230,118,0.07)0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.25);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--G);margin-bottom:1.5rem;position:relative;z-index:1;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--G);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.hero h1{font-size:clamp(2rem,5vw,3.6rem);font-weight:700;line-height:1.15;position:relative;z-index:1;letter-spacing:-.02em;}
+.hero h1 span{color:var(--G);}
+.hero p{margin-top:1rem;font-size:1.05rem;color:var(--txt2);max-width:540px;line-height:1.7;position:relative;z-index:1;}
+.hbtns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:2rem;position:relative;z-index:1;}
+.shint{position:absolute;bottom:2rem;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--txt3);font-size:12px;animation:bob 2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+.btn{padding:10px 22px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;border:none;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--fn);}
+.bg{background:var(--G);color:#000;}.bg:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,230,118,.3);}
+.bo{background:transparent;color:var(--txt);border:1px solid var(--bdr2);}.bo:hover{background:var(--bg3);}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdr);padding:0 1.5rem;display:flex;align-items:center;overflow-x:auto;}
+.nlogo{font-size:14px;font-weight:700;color:var(--G);margin-right:auto;white-space:nowrap;padding:1rem 0;}
+.ni{padding:.85rem 1rem;font-size:13px;font-weight:500;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--fn);}
+.ni:hover{color:var(--txt);}.ni.on{color:var(--G);border-bottom-color:var(--G);}
+
+/* SECTIONS */
+.sec{min-height:100vh;padding:5rem 2rem;max-width:1100px;margin:0 auto;}
+.sh{text-align:center;margin-bottom:3rem;}
+.stag{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem;}
+.tg{background:rgba(0,230,118,.1);color:var(--G);}.tb{background:rgba(79,195,247,.1);color:var(--B);}
+.ta{background:rgba(255,179,0,.1);color:var(--A);}.tr{background:rgba(255,82,82,.1);color:var(--R);}
+.tp2{background:rgba(206,147,216,.1);color:var(--P);}.ttl{background:rgba(38,198,218,.1);color:#26c6da;}
+.sh h2{font-size:2rem;font-weight:700;letter-spacing:-.02em;}
+.sh p{color:var(--txt2);margin-top:.5rem;font-size:1rem;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;}
+
+/* LAYOUT — single column stacked, canvas on top, info below */
+.layout{display:flex;flex-direction:column;gap:1.5rem;}
+@media(max-width:800px){.sec{padding:3rem 1rem;}}
+
+/* CANVAS STAGE — completely fixed height, never shifts */
+.stage{
+  background:var(--bg2);
+  border:1px solid var(--bdr);
+  border-radius:var(--r);
+  overflow:hidden;
+  /* fixed total height = canvas 340 + controls 52 = 392px — never changes */
+  height:392px;
+  display:flex;
+  flex-direction:column;
+}
+.stage canvas{
+  display:block;
+  /* CSS size fixed — JS only sets internal pixel buffer, not CSS size */
+  width:100%;
+  height:340px;
+  min-height:340px;
+  max-height:340px;
+  flex-shrink:0;
+}
+.cp{
+  height:52px;
+  min-height:52px;
+  max-height:52px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:0 1rem;
+  background:var(--bg3);
+  border-top:1px solid var(--bdr);
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+.cb{
+  padding:5px 12px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:500;
+  cursor:pointer;
+  transition:background .15s;
+  border:1px solid var(--bdr2);
+  background:transparent;
+  color:var(--txt);
+  font-family:var(--fn);
+  flex-shrink:0;
+  white-space:nowrap;
+  height:32px;
+  display:inline-flex;
+  align-items:center;
+}
+.cb:hover{background:rgba(255,255,255,.06);}
+.cbg{background:rgba(0,230,118,.12);border-color:rgba(0,230,118,.35);color:var(--G);}
+
+/* STEP PILLS — no outline/focus so clicking never scrolls */
+.srow{display:flex;gap:0;margin-bottom:1.2rem;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:4px;flex-wrap:wrap;}
+.sp{flex:1;min-width:0;text-align:center;padding:7px 5px;font-size:11px;border-radius:7px;color:var(--txt3);cursor:pointer;transition:all .2s;white-space:nowrap;outline:none;user-select:none;-webkit-tap-highlight-color:transparent;}
+.sp.on{background:var(--bg2);color:var(--txt);font-weight:600;}.sp.dn{color:var(--G);}
+
+/* INFO PANEL */
+.ip{display:flex;flex-direction:column;gap:1rem;}
+.ib{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);padding:1rem 1.2rem;font-size:13px;line-height:1.7;color:var(--txt2);}
+.ib strong{color:var(--txt);display:block;margin-bottom:4px;font-size:14px;}
+.hb{border-color:rgba(79,195,247,.3);background:rgba(79,195,247,.05);}
+.ha{border-color:rgba(255,179,0,.3);background:rgba(255,179,0,.05);}
+.hg{border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.05);}
+.hr{border-color:rgba(255,82,82,.3);background:rgba(255,82,82,.05);}
+.hp{border-color:rgba(206,147,216,.3);background:rgba(206,147,216,.05);}
+
+/* TERMINAL */
+.term{background:#060609;border:1px solid rgba(0,230,118,.12);border-radius:var(--rs);padding:.9rem;font-family:var(--fm);font-size:11.5px;line-height:1.85;min-height:100px;overflow-y:auto;max-height:240px;}
+.tp{color:#444;}.tok{color:var(--G);}.ti{color:var(--B);}.tw{color:var(--A);}.te{color:var(--R);}
+.tl{animation:fi .2s forwards;}
+@keyframes fi{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
+
+/* MODULE GRID */
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;}
+.mc{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:1.2rem;cursor:pointer;transition:all .2s;text-align:center;}
+.mc:hover{transform:translateY(-3px);border-color:var(--bdr2);background:var(--card);}
+.mi{font-size:30px;margin-bottom:8px;}.mc h3{font-size:13px;font-weight:600;margin-bottom:3px;}.mc p{font-size:11px;color:var(--txt2);}
+.wb{background:rgba(255,179,0,.06);border:1px solid rgba(255,179,0,.2);border-radius:var(--rs);padding:10px 14px;font-size:13px;color:var(--A);display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+
+/* QUIZ */
+.qo{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);padding:12px 16px;font-size:13.5px;cursor:pointer;margin-bottom:8px;transition:all .15s;display:flex;align-items:center;gap:12px;}
+.qo:hover{border-color:var(--bdr2);background:var(--bg2);}
+.qo.ok{border-color:rgba(0,230,118,.5);background:rgba(0,230,118,.07);color:var(--G);}
+.qo.no{border-color:rgba(255,82,82,.5);background:rgba(255,82,82,.07);color:var(--R);}
+.ql{width:24px;height:24px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;}
+.qe{background:var(--bg3);border-radius:var(--rs);padding:12px 16px;font-size:13px;color:var(--txt2);margin-top:10px;line-height:1.7;border-left:2px solid var(--G);display:none;}
+
+footer{text-align:center;padding:3rem 2rem;border-top:1px solid var(--bdr);color:var(--txt3);font-size:13px;}
+footer a{color:var(--G);text-decoration:none;font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hgrid"></div><div class="hglow"></div>
+  <div class="badge"><span class="dot"></span>Educational Simulator — No Real Signals</div>
+  <h1>See exactly how<br><span>wireless attacks work</span></h1>
+  <p>Every click shows the full signal journey — from device to device — with live canvas animations. Built for cybersecurity students.</p>
+  <div class="hbtns">
+    <button class="btn bg" onclick="goTo('subghz')">▶ Start Learning</button>
+    <button class="btn bo" onclick="goTo('overview')">What is Flipper Zero?</button>
+  </div>
+  <div class="shint"><span>scroll down</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <div class="nlogo">⚡ FlipperEdu</div>
+  <button class="ni on" onclick="goTo('overview')">Overview</button>
+  <button class="ni" onclick="goTo('subghz')">📡 Sub-GHz</button>
+  <button class="ni" onclick="goTo('rfid')">🪪 RFID</button>
+  <button class="ni" onclick="goTo('ir')">📺 Infrared</button>
+  <button class="ni" onclick="goTo('badusb')">💾 Bad USB</button>
+  <button class="ni" onclick="goTo('bluetooth')">📶 Bluetooth</button>
+  <button class="ni" onclick="goTo('quiz')">🏆 Quiz</button>
+</nav>
+
+<!-- OVERVIEW -->
+<section class="sec" id="overview">
+  <div class="sh"><div class="stag tg">Start here</div><h2>What is Flipper Zero?</h2>
+    <p>A pocket-sized multi-tool for security researchers. It communicates with wireless systems around you — and shows exactly how they work.</p>
+  </div>
+  <div class="mg">
+    <div class="mc" onclick="goTo('subghz')"><div class="mi">📡</div><h3>Sub-GHz Radio</h3><p>Garage doors, car remotes, doorbells</p></div>
+    <div class="mc" onclick="goTo('rfid')"><div class="mi">🪪</div><h3>RFID / NFC</h3><p>Office key fobs, metro cards, gates</p></div>
+    <div class="mc" onclick="goTo('ir')"><div class="mi">📺</div><h3>Infrared</h3><p>TV, AC units, projectors</p></div>
+    <div class="mc" onclick="goTo('badusb')"><div class="mi">💾</div><h3>Bad USB</h3><p>Keyboard injection, scripts</p></div>
+    <div class="mc" onclick="goTo('bluetooth')"><div class="mi">📶</div><h3>Bluetooth BLE</h3><p>Device scanning, spam attack</p></div>
+    <div class="mc" onclick="goTo('quiz')"><div class="mi">🏆</div><h3>Quiz</h3><p>Test your knowledge</p></div>
+  </div>
+  <div class="wb" style="margin-top:1.5rem">⚠️<div><strong style="display:inline">Legal notice:</strong> All animations are 100% virtual — no real signals. Using these techniques on devices you don't own is illegal under <strong>IT Act 2000, Section 66</strong>.</div></div>
+</section>
+
+<!-- SUB-GHz -->
+<section class="sec" id="subghz">
+  <div class="sh"><div class="stag tb">Module 1</div><h2>Sub-GHz Radio</h2>
+    <p>A person presses the garage door remote. Watch the full journey — from button press to door opening — and how Flipper captures it.</p>
+  </div>
+  <div class="srow" id="sg-srow">
+    <div class="sp on" id="sg-s0" onclick="sgStep(0,true)">1 · Listen</div>
+    <div class="sp" id="sg-s1" onclick="sgStep(1,true)">2 · Signal sent</div>
+    <div class="sp" id="sg-s2" onclick="sgStep(2,true)">3 · Decode</div>
+    <div class="sp" id="sg-s3" onclick="sgStep(3,true)">4 · Save</div>
+    <div class="sp" id="sg-s4" onclick="sgStep(4,true)">5 · Replay</div>
+  </div>
+  <div class="stage">
+    <canvas id="sg-cv" height="340"></canvas>
+    <div class="cp">
+      <button class="cb cbg" id="sg-pb" onclick="sgToggle()">▶ Play All Steps</button>
+      <button class="cb" onclick="sgStep(0,true)">↺ Reset</button>
+      <button class="cb" onclick="sgStep(Math.max(0,sgC-1),true)">◀ Prev</button>
+      <button class="cb" onclick="sgStep(Math.min(4,sgC+1),true)">Next ▶</button>
+    </div>
+  </div>
+  <div class="ip">
+    <div class="ib hb"><strong id="sg-t">Step 1 — Listen</strong><span id="sg-d">Flipper Zero's CC1101 radio chip is in receive mode at 433.92 MHz. It is listening to the air for any RF signal. Nothing is happening yet — the owner has not pressed the remote.</span></div>
+    <div class="term" id="sg-term"></div>
+    <div class="ib"><strong>⚡ Real example</strong>Your society's gate remote, home garage door, or wireless doorbell — almost all Indian remotes work at 433 MHz. Flipper can hear all of them.</div>
+  </div>
+</section>
+
+<!-- RFID -->
+<section class="sec" id="rfid">
+  <div class="sh"><div class="stag ta">Module 2</div><h2>RFID / NFC</h2>
+    <p>A person taps their office access card on the door reader. Watch what actually happens electrically — and how Flipper captures and clones the card.</p>
+  </div>
+  <div class="srow">
+    <div class="sp on" id="rf-s0" onclick="rfStep(0,true)">1 · EM field</div>
+    <div class="sp" id="rf-s1" onclick="rfStep(1,true)">2 · Card wakes</div>
+    <div class="sp" id="rf-s2" onclick="rfStep(2,true)">3 · Sends UID</div>
+    <div class="sp" id="rf-s3" onclick="rfStep(3,true)">4 · Captured</div>
+    <div class="sp" id="rf-s4" onclick="rfStep(4,true)">5 · Cloned</div>
+  </div>
+  <div class="stage">
+    <canvas id="rf-cv" height="340"></canvas>
+    <div class="cp">
+      <button class="cb cbg" id="rf-pb" onclick="rfToggle()">▶ Play All Steps</button>
+      <button class="cb" onclick="rfStep(0,true)">↺ Reset</button>
+      <button class="cb" onclick="rfStep(Math.max(0,rfC-1),true)">◀ Prev</button>
+      <button class="cb" onclick="rfStep(Math.min(4,rfC+1),true)">Next ▶</button>
+    </div>
+  </div>
+  <div class="ip">
+      <div class="ib ha"><strong id="rf-t">Step 1 — EM field on</strong><span id="rf-d">The office door reader constantly emits a 125 kHz electromagnetic field — like an invisible bubble of energy. Any RFID card that enters this bubble gets powered by it wirelessly.</span></div>
+      <div class="term" id="rf-term"></div>
+      <div class="ib"><strong>🪪 Real example</strong>Your college ID card, office key fob, DTC metro card — all use RFID. EM4100 fobs (very common in Indian apartments) are the easiest to clone.</div>
+    </div>
+  </div>
+</section>
+
+<!-- INFRARED -->
+<section class="sec" id="ir">
+  <div class="sh"><div class="stag tg">Module 3</div><h2>Infrared (IR)</h2>
+    <p>Someone presses Power on their TV remote. Watch the invisible light pulse travel, get decoded by Flipper, and then replayed to control the TV.</p>
+  </div>
+  <div class="srow">
+    <div class="sp on" id="ir-s0" onclick="irStep(0,true)">1 · Button press</div>
+    <div class="sp" id="ir-s1" onclick="irStep(1,true)">2 · LED pulses</div>
+    <div class="sp" id="ir-s2" onclick="irStep(2,true)">3 · IR travels</div>
+    <div class="sp" id="ir-s3" onclick="irStep(3,true)">4 · Decoded</div>
+    <div class="sp" id="ir-s4" onclick="irStep(4,true)">5 · Replayed</div>
+  </div>
+  <div class="stage">
+    <canvas id="ir-cv" height="340"></canvas>
+    <div class="cp">
+      <button class="cb cbg" id="ir-pb" onclick="irToggle()">▶ Play All Steps</button>
+      <button class="cb" onclick="irStep(0,true)">↺ Reset</button>
+      <button class="cb" onclick="irStep(Math.max(0,irC-1),true)">◀ Prev</button>
+      <button class="cb" onclick="irStep(Math.min(4,irC+1),true)">Next ▶</button>
+      <span style="font-size:11px;color:var(--txt2);margin-left:auto;flex-shrink:0">CMD:</span>
+      <button class="cb" onclick="irCmd='power';irStep(irC,true)">⏻ Power</button>
+      <button class="cb" onclick="irCmd='volup';irStep(irC,true)">Vol+</button>
+      <button class="cb" onclick="irCmd='chup';irStep(irC,true)">Ch+</button>
+    </div>
+  </div>
+  <div class="ip">
+    <div class="ib hg"><strong id="ir-t">Step 1 — Button press</strong><span id="ir-d">You press Power on the Samsung TV remote. The microcontroller inside looks up the binary code for "Power" — in Samsung NEC protocol that is address 0x07, command 0x02 — and prepares to transmit.</span></div>
+    <div class="term" id="ir-term"></div>
+    <div class="ib"><strong>📺 Real example</strong>Any Samsung, LG, Sony TV remote in your house. Flipper can learn any remote and then control any device — TV, AC, projector, set-top box.</div>
+  </div>
+</section>
+
+<!-- BAD USB -->
+<section class="sec" id="badusb">
+  <div class="sh"><div class="stag tr">Module 4</div><h2>Bad USB (HID Injection)</h2>
+    <p>A USB device is left near a computer. Someone plugs it in. Watch what happens — from plug-in to full attack — in under 5 seconds.</p>
+  </div>
+  <div class="srow">
+    <div class="sp on" id="bu-s0" onclick="buStep(0,true)">1 · Plug in</div>
+    <div class="sp" id="bu-s1" onclick="buStep(1,true)">2 · OS trusts</div>
+    <div class="sp" id="bu-s2" onclick="buStep(2,true)">3 · Script runs</div>
+    <div class="sp" id="bu-s3" onclick="buStep(3,true)">4 · Keys inject</div>
+    <div class="sp" id="bu-s4" onclick="buStep(4,true)">5 · Attack done</div>
+  </div>
+  <div class="stage">
+    <canvas id="bu-cv" height="340"></canvas>
+    <div class="cp">
+      <button class="cb cbg" id="bu-pb" onclick="buToggle()">▶ Play All Steps</button>
+      <button class="cb" onclick="buStep(0,true)">↺ Reset</button>
+      <button class="cb" onclick="buStep(Math.max(0,buC-1),true)">◀ Prev</button>
+      <button class="cb" onclick="buStep(Math.min(4,buC+1),true)">Next ▶</button>
+    </div>
+  </div>
+  <div class="ip">
+    <div class="ib hr"><strong id="bu-t">Step 1 — Plug in</strong><span id="bu-d">A person plugs Flipper Zero into a laptop via USB-C. The laptop immediately starts USB enumeration — it asks the device "what are you?" The OS shows no warning.</span></div>
+    <div class="term" id="bu-term"></div>
+    <div class="wb">⚠️<span>Defense: Use a USB data blocker ("USB condom"). Always lock screen when away. Disable unused USB ports in BIOS.</span></div>
+  </div>
+</section>
+
+<!-- BLUETOOTH -->
+<section class="sec" id="bluetooth">
+  <div class="sh"><div class="stag tp2">Module 5</div><h2>Bluetooth BLE</h2>
+    <p>A coffee shop has many Bluetooth devices. Flipper scans them all silently. Watch how every device broadcasts itself — and how spam attacks exploit this.</p>
+  </div>
+  <div class="srow">
+    <div class="sp on" id="bl-s0" onclick="blStep(0,true)">1 · BLE broadcast</div>
+    <div class="sp" id="bl-s1" onclick="blStep(1,true)">2 · Flipper scans</div>
+    <div class="sp" id="bl-s2" onclick="blStep(2,true)">3 · Packet decode</div>
+    <div class="sp" id="bl-s3" onclick="blStep(3,true)">4 · Devices found</div>
+    <div class="sp" id="bl-s4" onclick="blStep(4,true)">5 · Spam attack</div>
+  </div>
+  <div class="stage">
+    <canvas id="bl-cv" height="340"></canvas>
+    <div class="cp">
+      <button class="cb cbg" id="bl-pb" onclick="blToggle()">▶ Play All Steps</button>
+      <button class="cb" onclick="blStep(0,true)">↺ Reset</button>
+      <button class="cb" onclick="blStep(Math.max(0,blC-1),true)">◀ Prev</button>
+      <button class="cb" onclick="blStep(Math.min(4,blC+1),true)">Next ▶</button>
+    </div>
+  </div>
+  <div class="ip">
+    <div class="ib hp"><strong id="bl-t">Step 1 — BLE broadcast</strong><span id="bl-d">Every BLE device — earbuds, fitness band, phone, speaker — constantly broadcasts small advertisement packets every 20–1000ms. The packet says: "I exist, my name is JBL Flip 6, I am a speaker."</span></div>
+    <div class="term" id="bl-term"></div>
+    <div class="ib"><strong>🔒 Defense</strong>Turn Bluetooth off when not using it. iOS 17.2+ and Android 14+ filter BLE spam. Use non-discoverable mode in settings.</div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="sec" id="quiz">
+  <div class="sh"><div class="stag ttl">Test yourself</div><h2>Knowledge Quiz</h2>
+    <p>10 questions covering all 5 modules. See how well you understood everything.</p>
+  </div>
+  <div style="max-width:680px;margin:0 auto">
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.5rem" id="qcard">
+      <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
+        <span style="font-size:13px;color:var(--txt2)" id="qn">Question 1 of 10</span>
+        <span style="font-size:14px;font-weight:600;color:var(--G)" id="qs">Score: 0</span>
+      </div>
+      <div style="background:var(--bg3);border-radius:4px;height:4px;margin-bottom:1.5rem;overflow:hidden"><div id="qbar" style="height:100%;background:var(--G);width:0%;transition:width .4s"></div></div>
+      <p id="qt" style="font-size:1.05rem;font-weight:600;margin-bottom:1.2rem;line-height:1.5"></p>
+      <div id="qopts"></div>
+      <div class="qe" id="qexp"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:1rem">
+        <button class="cb" id="qnxt" onclick="nextQ()" style="display:none">Next →</button>
+      </div>
+    </div>
+    <div id="qdone" style="display:none;text-align:center;padding:3rem 1rem">
+      <div style="font-size:4rem;margin-bottom:1rem" id="demoji">🏆</div>
+      <div style="font-size:2.5rem;font-weight:700;color:var(--G)" id="dscore"></div>
+      <div style="color:var(--txt2);margin-top:.5rem" id="dmsg"></div>
+      <button class="btn bg" onclick="restartQ()" style="margin-top:1.5rem">Try again</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="margin-bottom:8px;font-size:16px;font-weight:600;color:var(--G)">⚡ FlipperEdu</p>
+  <p>Made by <a href="https://www.instagram.com/sudo.learner" target="_blank" rel="noopener">@sudo.learner</a> — 100% virtual, no real signals.</p>
+  <p style="margin-top:6px">IT Act 2000 Section 66 — Educational use only — MIT License</p>
+</footer>
+
+<script>
+'use strict';
+/* ═══════════ UTILS ═══════════ */
+function goTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+function eio(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+
+// Nav highlight
+window.addEventListener('scroll',()=>{
+  const ids=['overview','subghz','rfid','ir','badusb','bluetooth','quiz'];
+  const btns=document.querySelectorAll('.ni');
+  let c=0; ids.forEach((id,i)=>{const e=document.getElementById(id);if(e&&e.getBoundingClientRect().top<150)c=i;});
+  btns.forEach((b,i)=>b.classList.toggle('on',i===c));
+},{passive:true});
+
+/* Terminal */
+function tAdd(id,txt,cls,d){
+  setTimeout(()=>{
+    const el=document.getElementById(id); if(!el)return;
+    const div=document.createElement('div'); div.className='tl';
+    div.innerHTML=`<span class="${cls}">${txt}</span>`; el.appendChild(div);
+    el.scrollTop=el.scrollHeight;
+  },d);
+}
+function tClr(id){const el=document.getElementById(id);if(el)el.innerHTML='';}
+
+/* ── Canvas setup ──
+   All canvases are initialised ONCE in initCanvases() after page load.
+   cv() just returns the stored ctx and dimensions — no measuring, no resizing.
+   This guarantees zero layout shift during animation. */
+const _cv={};
+function initCanvases(){
+  const dpr=window.devicePixelRatio||1;
+  /* key = full element id e.g. 'sg-cv' — must match what cv() is called with */
+  ['sg-cv','rf-cv','ir-cv','bu-cv','bl-cv'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const W=el.parentElement.clientWidth||700;
+    const H=340;
+    el.width=Math.floor(W*dpr);
+    el.height=Math.floor(H*dpr);
+    el.style.width=W+'px';
+    el.style.height='340px';
+    const ctx=el.getContext('2d');
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    _cv[id]={ctx,W,H};
+  });
+}
+function cv(id){
+  /* if not initialised yet, return a safe fallback */
+  if(_cv[id]) return _cv[id];
+  /* fallback: init on demand */
+  const el=document.getElementById(id);
+  if(!el)return null;
+  const dpr=window.devicePixelRatio||1;
+  const W=el.parentElement.clientWidth||700;
+  const H=340;
+  el.width=Math.floor(W*dpr);
+  el.height=Math.floor(H*dpr);
+  el.style.width=W+'px';
+  el.style.height='340px';
+  const ctx=el.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  _cv[id]={ctx,W,H};
+  return _cv[id];
+}
+
+/* ── Draw helpers ── */
+function rrect(ctx,x,y,w,h,r){
+  r=Math.min(r,w/2,h/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+}
+function gridBg(ctx,W,H,col){
+  ctx.save(); ctx.strokeStyle=col||'rgba(255,255,255,0.035)'; ctx.lineWidth=.5;
+  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.restore();
+}
+/* draw a device box with emoji + label */
+function devBox(ctx,x,y,w,h,col,emoji,line1,line2){
+  ctx.save();
+  /* shadow glow */
+  ctx.shadowColor=col; ctx.shadowBlur=8;
+  ctx.fillStyle=col+'18'; rrect(ctx,x,y,w,h,12); ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.strokeStyle=col+'55'; ctx.lineWidth=1; ctx.stroke();
+  /* emoji */
+  ctx.font='26px serif'; ctx.textAlign='center';
+  ctx.fillStyle='#fff'; ctx.fillText(emoji,x+w/2,y+h/2+4);
+  /* labels below box */
+  ctx.fillStyle=col; ctx.font='600 11px Inter,sans-serif';
+  ctx.fillText(line1,x+w/2,y+h+16);
+  if(line2){ctx.fillStyle=col+'99'; ctx.font='10px Inter,sans-serif'; ctx.fillText(line2,x+w/2,y+h+30);}
+  ctx.restore();
+}
+/* status label at bottom of canvas */
+function statusLabel(ctx,W,H,txt,col){
+  ctx.save();
+  ctx.fillStyle=col+'20'; rrect(ctx,W/2-200,H-36,400,26,6); ctx.fill();
+  ctx.fillStyle=col; ctx.font='500 12px Inter,sans-serif'; ctx.textAlign='center';
+  ctx.fillText(txt,W/2,H-18); ctx.restore();
+}
+/* animated dashed signal line with glowing head */
+function sigLine(ctx,x1,y,x2,p,col){
+  const ex=x1+(x2-x1)*p;
+  ctx.save();
+  ctx.strokeStyle=col; ctx.lineWidth=2;
+  ctx.setLineDash([5,5]); ctx.lineDashOffset=-(Date.now()/55)%10;
+  ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(ex,y); ctx.stroke();
+  ctx.setLineDash([]);
+  /* glowing head */
+  ctx.shadowColor=col; ctx.shadowBlur=12;
+  ctx.fillStyle=col; ctx.beginPath(); ctx.arc(ex,y,6,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0;
+  for(let r=12;r<44;r+=12){
+    ctx.beginPath(); ctx.arc(ex,y,r,0,Math.PI*2);
+    const a=1-r/44; ctx.strokeStyle=col+(Math.round(a*180).toString(16).padStart(2,'0'));
+    ctx.lineWidth=.5; ctx.stroke();
+  }
+  ctx.restore();
+}
+/* NEC waveform bar chart */
+function necBars(ctx,x,y,W2,H2,col,bits,fraction){
+  const bw=W2/bits.length;
+  const n=Math.ceil(bits.length*Math.min(fraction,1));
+  ctx.save();
+  for(let i=0;i<n;i++){
+    const bh=bits[i]?H2:H2*.3;
+    ctx.fillStyle=bits[i]?col:col+'30';
+    ctx.fillRect(x+i*bw+1,y-bh,bw-2,bh);
+  }
+  ctx.restore();
+}
+/* expanding ring animation */
+function rings(ctx,cx,cy,col,n,phase,maxR){
+  ctx.save();
+  for(let i=0;i<n;i++){
+    const t=(phase+i/n)%1;
+    const r=t*maxR;
+    const a=.35*(1-t);
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle=col+(Math.round(a*255).toString(16).padStart(2,'0'));
+    ctx.lineWidth=1.2; ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════
+   MODULE 1 — SUB-GHz
+═══════════════════════════════════════ */
+let sgC=0,sgRaf=null,sgPlay=false,sgT=0,sgStep_=0;
+const sgInfo=[
+  {t:'Step 1 — Listen',d:'Flipper Zero\'s CC1101 radio chip is in receive mode at 433.92 MHz. It is listening to the air for any RF signal. Nothing is happening yet — the owner has not pressed the remote.'},
+  {t:'Step 2 — Signal sent',d:'The owner presses the garage remote button. The remote\'s 433 MHz transmitter fires — sending rapid on/off pulses of radio waves (OOK modulation) through the air at the speed of light.'},
+  {t:'Step 3 — Decode',d:'Flipper\'s CC1101 detects the RF pulses. It samples the timings of each on and off period. It then matches this pattern against known protocols — Princeton, CAME, NEC — and finds a match.'},
+  {t:'Step 4 — Save',d:'The decoded signal — frequency 433.92 MHz, modulation OOK, key 0xA3F2B1 — is saved to Flipper\'s SD card as garage_door.sub. This file can be replayed at any time, even days later.'},
+  {t:'Step 5 — Replay attack',d:'Flipper replays the saved signal at 433 MHz. The garage door receiver hears the exact same RF pattern as the real remote. It opens the door. This works because cheap remotes use fixed codes — not rolling codes.'}
+];
+const sgTerm=[
+  [['[flipper] Sub-GHz ready — CC1101 chip','tok'],['[freq]   433.92 MHz receive mode','ti'],['[rssi]   Listening... no signal yet','ti']],
+  [['[scan]   !! RF energy detected !!','tok'],['[rssi]   -54 dBm — strong signal nearby','tok'],['[mod]    OOK AM650 — on/off pulses','ti']],
+  [['[decode] Sampling pulse timings...','ti'],['[proto]  Princeton protocol matched!','tok'],['[key]    0xA3F2B1 (24-bit fixed code)','tok']],
+  [['[save]   Writing decoded signal...','ti'],['[file]   /SD/subghz/garage_door.sub','tok'],['[info]   Fixed code — no encryption','tw']],
+  [['[replay] Loading garage_door.sub','ti'],['[tx]     Transmitting @ 433.92 MHz x3','tw'],['[result] Door opened — attack success!','tok']]
+];
+/* update pills + info WITHOUT any scroll */
+function sgUI(n){
+  sgC=n;
+  for(let i=0;i<5;i++){const p=document.getElementById('sg-s'+i);p.className='sp'+(i===n?' on':i<n?' dn':'');}
+  document.getElementById('sg-t').textContent=sgInfo[n].t;
+  document.getElementById('sg-d').textContent=sgInfo[n].d;
+  tClr('sg-term');
+  sgTerm[n].forEach(([t,c],i)=>tAdd('sg-term','<span class="tp">[sg] </span>'+t,c,i*280));
+}
+function sgStep(n,fromUser){
+  if(fromUser&&sgPlay){cancelAnimationFrame(sgRaf);sgPlay=false;document.getElementById('sg-pb').textContent='▶ Play All Steps';}
+  sgUI(n); sgDraw(n,1);
+}
+function sgDraw(n,p){
+  const c=cv('sg-cv'); if(!c)return;
+  const {ctx,W,H}=c; ctx.clearRect(0,0,W,H);
+  gridBg(ctx,W,H,'rgba(79,195,247,0.04)');
+  /* scene: house on right, person holding remote, flipper on left */
+  /* house */
+  ctx.save();
+  ctx.fillStyle='#1a1a2e'; rrect(ctx,W-190,H/2-75,160,130,10); ctx.fill();
+  ctx.strokeStyle='#ffb30040'; ctx.lineWidth=1; ctx.stroke();
+  /* roof */
+  ctx.fillStyle='#ffb30025'; ctx.beginPath(); ctx.moveTo(W-200,H/2-75); ctx.lineTo(W-110,H/2-130); ctx.lineTo(W-20,H/2-75); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='#ffb30045'; ctx.lineWidth=1; ctx.stroke();
+  /* garage door */
+  const doorOpen=n===4&&p>.7;
+  ctx.fillStyle=doorOpen?'rgba(0,230,118,0.2)':'#2a2a3e';
+  rrect(ctx,W-170,H/2-55,120,80,4); ctx.fill();
+  ctx.strokeStyle=doorOpen?'rgba(0,230,118,0.6)':'#ffb30030'; ctx.lineWidth=1; ctx.stroke();
+  /* garage door lines */
+  if(!doorOpen){ctx.strokeStyle='#33334a'; ctx.lineWidth=.5;[20,40,60].forEach(dy=>{ctx.beginPath();ctx.moveTo(W-170,H/2-55+dy);ctx.lineTo(W-50,H/2-55+dy);ctx.stroke();});}
+  else{ctx.fillStyle='#00e676'; ctx.font='bold 13px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('🔓 OPEN!',W-110,H/2-10);}
+  ctx.fillStyle='#ffb300'; ctx.font='11px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('Garage Door',W-110,H/2+72); ctx.restore();
+  /* person with remote */
+  const px2=W-260, py=H/2-20;
+  ctx.save();
+  ctx.fillStyle='#333350'; /* body */
+  ctx.beginPath(); ctx.arc(px2,py-40,18,0,Math.PI*2); ctx.fill(); /* head */
+  rrect(ctx,px2-14,py-22,28,45,6); ctx.fill(); /* torso */
+  /* remote in hand */
+  ctx.fillStyle=n>=1?'#ffb300':'#666';
+  rrect(ctx,px2+8,py-10,18,32,4); ctx.fill();
+  if(n>=1){ctx.fillStyle='#fff'; ctx.font='8px serif'; ctx.textAlign='center'; ctx.fillText('📡',px2+17,py+5);}
+  ctx.fillStyle='#8888aa'; ctx.font='10px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('Person',px2,py+38);
+  ctx.restore();
+  /* Flipper device on left */
+  devBox(ctx,30,H/2-45,105,90,'#4fc3f7','📡','Flipper Zero','433.92 MHz');
+  /* flipper screen showing freq */
+  ctx.save();
+  ctx.fillStyle='#060609'; rrect(ctx,38,H/2-36,70,45,4); ctx.fill();
+  ctx.fillStyle='#00e676'; ctx.font='9px Fira Code,monospace'; ctx.textAlign='left';
+  ctx.fillText('SUB-GHZ',42,H/2-22); ctx.fillStyle='#4fc3f7'; ctx.fillText('433.92MHz',42,H/2-9);
+  ctx.fillStyle=n>=1?'#00e676':'#333'; ctx.fillText(n>=1?'SIGNAL!':'listen..',42,H/2+4);
+  ctx.restore();
+
+  /* STEP-SPECIFIC ANIMATIONS */
+  if(n===0){/* listening rings from flipper */
+    rings(ctx,83,H/2,'#4fc3f7',4,Date.now()/1800,90);
+    statusLabel(ctx,W,H,'📻 Flipper listening on 433.92 MHz — waiting for signal','#4fc3f7');
+  }
+  if(n===1){/* signal flying from remote to flipper */
+    rings(ctx,px2,py-10,'#ffb300',3,Date.now()/1400,50);
+    sigLine(ctx,px2-5,H/2,135,p,'#ffb300');
+    statusLabel(ctx,W,H,'📶 OOK radio signal traveling through air at 433 MHz','#ffb300');
+  }
+  if(n===2){/* show waveform decoding */
+    sigLine(ctx,px2-5,H/2,135,1,'#ffb300');
+    const bits=[1,0,1,1,0,0,1,0,1,1,0,1,0,1,0,0,1,1,0,1];
+    necBars(ctx,W/2-100,H/2+80,200,40,'#4fc3f7',bits,p);
+    ctx.save(); ctx.fillStyle='rgba(79,195,247,0.08)'; rrect(ctx,W/2-110,H/2+32,220,55,8); ctx.fill();
+    ctx.fillStyle='#4fc3f7'; ctx.font='10px Fira Code,monospace'; ctx.textAlign='center';
+    ctx.fillText('Protocol: Princeton  Key: 0xA3F2B1',W/2,H/2+50); ctx.restore();
+    statusLabel(ctx,W,H,'🔍 Analyzing pulse timings — Princeton protocol matched','#4fc3f7');
+  }
+  if(n===3){/* SD card save */
+    ctx.save(); ctx.globalAlpha=Math.min(p*2,1);
+    ctx.fillStyle='rgba(0,230,118,0.12)'; rrect(ctx,W/2-75,H/2-95,150,70,10); ctx.fill();
+    ctx.strokeStyle='rgba(0,230,118,0.4)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.font='28px serif'; ctx.textAlign='center'; ctx.fillText('💾',W/2,H/2-60);
+    ctx.fillStyle='#00e676'; ctx.font='600 11px Inter,sans-serif'; ctx.textAlign='center';
+    ctx.fillText('garage_door.sub',W/2,H/2-38);
+    ctx.fillStyle='#8888aa'; ctx.font='10px Inter,sans-serif'; ctx.fillText('433.92 MHz · OOK · 0xA3F2B1',W/2,H/2-22);
+    ctx.globalAlpha=1; ctx.restore();
+    statusLabel(ctx,W,H,'💾 Signal decoded and saved to SD card','#00e676');
+  }
+  if(n===4){/* replay from flipper to garage */
+    sigLine(ctx,135,H/2,W-190,p,'#00e676');
+    statusLabel(ctx,W,H,'🔁 Replaying saved signal — garage door receives it and opens','#00e676');
+  }
+}
+function sgToggle(){
+  if(sgPlay){cancelAnimationFrame(sgRaf);sgPlay=false;document.getElementById('sg-pb').textContent='▶ Play All Steps';return;}
+  sgPlay=true; document.getElementById('sg-pb').textContent='⏸ Pause';
+  sgStep_=0; sgT=0; sgUI(0);
+  function tick(){
+    if(!sgPlay)return;
+    sgT+=0.008;
+    if(sgT>=1){sgT=0; if(sgStep_<4){sgStep_++; sgUI(sgStep_);}else{sgPlay=false;document.getElementById('sg-pb').textContent='▶ Play All Steps';return;}}
+    sgDraw(sgStep_,eio(sgT)); sgRaf=requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ═══════════════════════════════════════
+   MODULE 2 — RFID
+═══════════════════════════════════════ */
+let rfC=0,rfRaf=null,rfPlay=false,rfT=0,rfStep_=0;
+const rfInfo=[
+  {t:'Step 1 — EM field on',d:'The office door reader (wall-mounted box) constantly radiates a 125 kHz electromagnetic field — like an invisible energy bubble extending ~10 cm from its surface. No card is near it yet.'},
+  {t:'Step 2 — Card wakes up',d:'The employee taps their key fob on the reader. The fob\'s copper coil antenna enters the EM field — electromagnetic induction generates a tiny current inside the coil. This current powers the chip. The card wakes up with no battery.'},
+  {t:'Step 3 — Card sends UID',d:'The powered chip immediately broadcasts its UID (Unique ID) by doing load modulation — it rapidly changes how much current it draws from the field. Flipper\'s antenna detects these tiny variations in field strength.'},
+  {t:'Step 4 — UID captured',d:'Flipper decodes the load modulation pulses: the card\'s UID is 0xA3F2B1. For cheap EM4100 key fobs (common in Indian apartments), this ID is permanently fixed — it was set at the factory and never changes.'},
+  {t:'Step 5 — Clone written',d:'Flipper writes UID 0xA3F2B1 onto a blank T5577 card (costs ₹30 on Amazon). The blank card now responds identically to the original. The door reader gets the same UID — it unlocks.'}
+];
+const rfTerm=[
+  [['[rfid]  Reader active @ 125 kHz','tok'],['[field] EM field ON — ~10cm range','ti'],['[wait]  Waiting for card...','ti']],
+  [['[detect] Card entered EM field!','tok'],['[induct] Coil current: charging cap','ti'],['[chip]   Card IC powered up','tok']],
+  [['[rx]    Load modulation pulses detected','tok'],['[bits]  Receiving UID bit stream...','ti'],['[proto] EM4100 protocol confirmed','tok']],
+  [['[uid]   0xA3F2B1  (hex)','tok'],['[uid]   10100011 11110010 10110001','ti'],['[warn]  Fixed code — no encryption!','tw']],
+  [['[clone] Writing to T5577 blank (₹30)','tw'],['[write] UID 0xA3F2B1 → blank card OK','tok'],['[test]  Clone: door unlocks ✓','tok']]
+];
+function rfUI(n){
+  rfC=n;
+  for(let i=0;i<5;i++){const p=document.getElementById('rf-s'+i);p.className='sp'+(i===n?' on':i<n?' dn':'');}
+  document.getElementById('rf-t').textContent=rfInfo[n].t;
+  document.getElementById('rf-d').textContent=rfInfo[n].d;
+  tClr('rf-term'); rfTerm[n].forEach(([t,c],i)=>tAdd('rf-term','<span class="tp">[rf] </span>'+t,c,i*280));
+}
+function rfStep(n,fromUser){
+  if(fromUser&&rfPlay){cancelAnimationFrame(rfRaf);rfPlay=false;document.getElementById('rf-pb').textContent='▶ Play All Steps';}
+  rfUI(n); rfDraw(n,1);
+}
+function rfDraw(n,p){
+  const c=cv('rf-cv'); if(!c)return;
+  const {ctx,W,H}=c; ctx.clearRect(0,0,W,H);
+  gridBg(ctx,W,H,'rgba(255,179,0,0.04)');
+  /* door reader on right wall */
+  const rx=W-90, ry=H/2-60;
+  ctx.save();
+  /* wall */
+  ctx.fillStyle='#1a1018'; ctx.fillRect(W-110,0,110,H);
+  ctx.strokeStyle='#ffb30020'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(W-110,0); ctx.lineTo(W-110,H); ctx.stroke();
+  /* reader box */
+  ctx.fillStyle='#2a1a2e'; rrect(ctx,rx-20,ry,80,120,8); ctx.fill();
+  ctx.strokeStyle='#ffb30060'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.font='22px serif'; ctx.textAlign='center'; ctx.fillText('🚪',rx+20,ry+40);
+  ctx.fillStyle='#ffb300'; ctx.font='10px Inter,sans-serif'; ctx.fillText('Door Reader',rx+20,ry+135);
+  ctx.fillStyle='#ffb30060'; ctx.font='9px Fira Code,monospace'; ctx.fillText('125 kHz',rx+20,ry+150);
+  /* LED on reader */
+  const ledCol=n>=3?'#00e676':n>=1?'#ffb300':'#ff5252';
+  ctx.fillStyle=ledCol; ctx.shadowColor=ledCol; ctx.shadowBlur=8;
+  ctx.beginPath(); ctx.arc(rx+20,ry+65,5,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0; ctx.restore();
+
+  /* person with fob */
+  const px2=W-260, py=H/2;
+  ctx.save();
+  ctx.fillStyle='#2a2a40';
+  ctx.beginPath(); ctx.arc(px2,py-50,18,0,Math.PI*2); ctx.fill();
+  rrect(ctx,px2-14,py-32,28,50,6); ctx.fill();
+  /* arm reaching toward reader */
+  const armX=n>=1?px2+40:px2+10;
+  ctx.strokeStyle='#3a3a55'; ctx.lineWidth=8; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(px2+8,py-18); ctx.lineTo(armX,py); ctx.stroke();
+  /* key fob */
+  const fobX=armX+10, fobCol=n>=4?'#00e676':n>=1?'#4fc3f7':'#888';
+  ctx.fillStyle=fobCol; ctx.shadowColor=fobCol; ctx.shadowBlur=n>=1?10:0;
+  rrect(ctx,fobX-12,py-12,24,20,5); ctx.fill();
+  ctx.shadowBlur=0;
+  if(n>=1){ctx.fillStyle='#fff'; ctx.font='8px serif'; ctx.textAlign='center'; ctx.fillText('🪪',fobX,py+2);}
+  ctx.fillStyle='#8888aa'; ctx.font='10px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('Employee',px2,py+38);
+  ctx.restore();
+
+  /* Flipper on far left */
+  devBox(ctx,20,H/2-45,105,90,'#ffb300','📡','Flipper Zero','125 kHz');
+  ctx.save();
+  ctx.fillStyle='#060609'; rrect(ctx,28,H/2-36,70,45,4); ctx.fill();
+  ctx.fillStyle='#ffb300'; ctx.font='9px Fira Code,monospace'; ctx.textAlign='left';
+  ctx.fillText('RFID READ',32,H/2-22);
+  ctx.fillStyle=n>=3?'#00e676':'#4fc3f7';
+  ctx.fillText(n>=3?'0xA3F2B1':n>=1?'detect..':'125kHz',32,H/2-9);
+  ctx.fillStyle=n>=4?'#00e676':'#333'; ctx.fillText(n>=4?'CLONED ✓':'waiting',32,H/2+4);
+  ctx.restore();
+
+  /* EM field rings from reader */
+  const fieldR=Math.min(p+0.2,1)*160;
+  for(let r=30;r<fieldR;r+=30){
+    const alpha=n===0?0.22*(1-r/fieldR):0.1*(1-r/fieldR);
+    ctx.save(); ctx.beginPath(); ctx.arc(rx+20,H/2,r,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(255,179,0,${alpha})`; ctx.lineWidth=n===0?1.5:0.8; ctx.stroke(); ctx.restore();
+  }
+  /* step-specific */
+  if(n>=1&&n<4){/* card glowing from power */
+    ctx.save(); ctx.fillStyle=`rgba(79,195,247,${0.15*p})`;
+    ctx.shadowColor='#4fc3f7'; ctx.shadowBlur=12*p;
+    rrect(ctx,fobX-12,py-12,24,20,5); ctx.fill(); ctx.shadowBlur=0; ctx.restore();
+  }
+  if(n>=2&&n<4){/* load modulation dots from fob to flipper */
+    for(let i=0;i<6;i++){
+      const dp=(p*0.8+i/6)%1;
+      const dx=fobX+(125-fobX)*dp;
+      ctx.save(); ctx.fillStyle=`rgba(79,195,247,${0.7*(1-dp)})`;
+      ctx.beginPath(); ctx.arc(dx,H/2,i%2===0?5:3,0,Math.PI*2); ctx.fill(); ctx.restore();
+    }
+  }
+  if(n===3){/* UID display */
+    ctx.save(); ctx.globalAlpha=Math.min(p*2,1);
+    ctx.fillStyle='rgba(0,230,118,0.1)'; rrect(ctx,W/2-90,H/2-90,180,50,8); ctx.fill();
+    ctx.strokeStyle='rgba(0,230,118,0.3)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle='#00e676'; ctx.font='600 13px Fira Code,monospace'; ctx.textAlign='center';
+    ctx.fillText('UID: 0xA3F2B1',W/2,H/2-58);
+    ctx.fillStyle='#8888aa'; ctx.font='10px Fira Code,monospace';
+    ctx.fillText('10100011 11110010 10110001',W/2,H/2-40);
+    ctx.globalAlpha=1; ctx.restore();
+  }
+  if(n===4){/* blank card being written */
+    ctx.save(); ctx.globalAlpha=Math.min(p*1.5,1);
+    ctx.fillStyle='rgba(0,230,118,0.15)'; rrect(ctx,W/2-70,H/2-30,140,60,10); ctx.fill();
+    ctx.strokeStyle='rgba(0,230,118,0.5)'; ctx.lineWidth=2; ctx.stroke();
+    ctx.font='20px serif'; ctx.textAlign='center'; ctx.fillText('🪪',W/2,H/2+5);
+    ctx.fillStyle='#00e676'; ctx.font='600 11px Inter,sans-serif';
+    ctx.fillText('T5577 Clone ✓',W/2,H/2+22);
+    ctx.globalAlpha=1; ctx.restore();
+  }
+  const lbls=['EM field radiating — no card yet','Card coil harvesting energy — chip wakes up','Card sending UID via load modulation','UID 0xA3F2B1 captured by Flipper','Clone written — door unlocks with fake card'];
+  statusLabel(ctx,W,H,lbls[n],'#ffb300');
+}
+function rfToggle(){
+  if(rfPlay){cancelAnimationFrame(rfRaf);rfPlay=false;document.getElementById('rf-pb').textContent='▶ Play All Steps';return;}
+  rfPlay=true; document.getElementById('rf-pb').textContent='⏸ Pause';
+  rfStep_=0; rfT=0; rfUI(0);
+  function tick(){
+    if(!rfPlay)return; rfT+=0.009;
+    if(rfT>=1){rfT=0; if(rfStep_<4){rfStep_++; rfUI(rfStep_);}else{rfPlay=false;document.getElementById('rf-pb').textContent='▶ Play All Steps';return;}}
+    rfDraw(rfStep_,eio(rfT)); rfRaf=requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ═══════════════════════════════════════
+   MODULE 3 — INFRARED
+═══════════════════════════════════════ */
+let irC=0,irRaf=null,irPlay=false,irT=0,irStep_=0;
+let irCmd='power';
+const irCmds={
+  power:{name:'Power',hex:'0xE0E040BF',bits:[1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1]},
+  volup:{name:'Vol+', hex:'0xE0E0E01F',bits:[1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1]},
+  chup: {name:'Ch+',  hex:'0xE0E048B7',bits:[1,1,1,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,1,0,1,1,1,1,0,1,1,0,1,0,1]}
+};
+const irInfo=[
+  {t:'Step 1 — Button press',d:'You press Power on the Samsung TV remote. The microcontroller inside looks up the code for "Power" in its ROM — address byte 0x07, command byte 0x40 in Samsung NEC protocol. It prepares to send 32 bits.'},
+  {t:'Step 2 — IR LED pulses',d:'The remote\'s IR LED (infrared light-emitting diode) starts flashing at exactly 38,000 times per second — 38 kHz. It flashes "on" for specific durations (marks) and stays off for specific durations (spaces) to encode each bit.'},
+  {t:'Step 3 — IR light travels',d:'Infrared light is invisible to human eyes (wavelength ~940nm) but it travels exactly like visible light — in a straight line at 300,000 km/s. Range is ~8 metres. It CANNOT go through walls, hands, or obstacles.'},
+  {t:'Step 4 — Flipper decodes',d:'Flipper\'s IR receiver (TSOP38238 chip) detects the pulses. It measures each mark and space: 9ms mark + 4.5ms space = NEC start burst. Then 32 bits follow. Flipper decodes this to: Samsung Power = 0xE0E040BF.'},
+  {t:'Step 5 — Flipper replays',d:'Flipper\'s IR transmitter LED recreates the exact same pulse timings at 38 kHz. The TV\'s IR receiver window gets an identical signal to the real remote. The TV turns off — from the other side of the room.'}
+];
+const irTerm=[
+  [['[ir]   Receiver ready — TSOP38238','tok'],['[proto] NEC mode selected','ti'],['[wait]  Waiting for IR pulses...','ti']],
+  [['[tx]   IR LED active @ 38 kHz','tok'],['[enc]   Encoding: ','ti'],['[mod]   9ms burst — 4.5ms space — bits','ti']],
+  [['[light] Wavelength: 940nm (invisible)','ti'],['[speed] 300,000 km/s line-of-sight','ti'],['[range] Max ~8m — blocked by obstacles','tw']],
+  [['[rx]   IR pulses received!','tok'],['[nec]  9ms+4.5ms = NEC start burst','ti'],['[bits] 32 bits → ','tok']],
+  [['[save]  command saved to SD','tok'],['[tx]    Replaying 32-bit NEC @ 38 kHz','tw'],['[result] TV responds — Power toggled ✓','tok']]
+];
+function irUI(n){
+  irC=n;
+  for(let i=0;i<5;i++){const p=document.getElementById('ir-s'+i);p.className='sp'+(i===n?' on':i<n?' dn':'');}
+  document.getElementById('ir-t').textContent=irInfo[n].t;
+  document.getElementById('ir-d').textContent=irInfo[n].d;
+  tClr('ir-term');
+  const cmd=irCmds[irCmd];
+  const lines=irTerm[n].map(a=>[...a]);
+  if(n===1&&lines[1])lines[1][0]+=' '+cmd.name+' '+cmd.hex;
+  if(n===3&&lines[3])lines[3][0]+=' '+cmd.hex;
+  lines.forEach(([t,c],i)=>tAdd('ir-term','<span class="tp">[ir] </span>'+t,c,i*280));
+}
+function irStep(n,fromUser){
+  if(fromUser&&irPlay){cancelAnimationFrame(irRaf);irPlay=false;document.getElementById('ir-pb').textContent='▶ Play All Steps';}
+  irUI(n); irDraw(n,1);
+}
+function irDraw(n,p){
+  const c=cv('ir-cv'); if(!c)return;
+  const {ctx,W,H}=c; ctx.clearRect(0,0,W,H);
+  gridBg(ctx,W,H,'rgba(0,230,118,0.03)');
+  const cmd=irCmds[irCmd];
+  /* TV on right wall */
+  ctx.save();
+  /* TV screen */
+  ctx.fillStyle='#0d0d1a'; rrect(ctx,W-200,H/2-85,170,130,8); ctx.fill();
+  ctx.strokeStyle='#4fc3f760'; ctx.lineWidth=1.5; ctx.stroke();
+  /* TV content */
+  ctx.fillStyle=n===4&&p>.7?'#16261a':'#0a0a14';
+  rrect(ctx,W-192,H/2-78,154,108,4); ctx.fill();
+  if(n===4&&p>.7){ctx.fillStyle='#00e676'; ctx.font='bold 13px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('📺 OFF',W-115,H/2-18);}
+  else{ctx.fillStyle='#333'; ctx.font='10px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('Samsung TV',W-115,H/2-18); ctx.fillText('Model: UA32T4010',W-115,H/2-2);}
+  /* IR receiver window on TV */
+  const irRxX=W-190, irRxY=H/2+30;
+  const rxActive=n>=3;
+  ctx.fillStyle=rxActive?'rgba(0,230,118,0.3)':'#1a1a2e';
+  ctx.beginPath(); ctx.arc(irRxX,irRxY,8,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle=rxActive?'#00e676':'#333'; ctx.lineWidth=1; ctx.stroke();
+  ctx.fillStyle='#8888aa'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('IR RX',irRxX,irRxY+20);
+  ctx.fillStyle='#4fc3f7'; ctx.font='11px Inter,sans-serif'; ctx.fillText('Samsung TV',W-115,H/2+60);
+  ctx.restore();
+  /* person with remote — left side */
+  const px2=100, py=H/2;
+  ctx.save();
+  ctx.fillStyle='#2a2a40';
+  ctx.beginPath(); ctx.arc(px2,py-50,18,0,Math.PI*2); ctx.fill();
+  rrect(ctx,px2-14,py-32,28,50,6); ctx.fill();
+  /* remote */
+  ctx.fillStyle='#2a2a3e'; rrect(ctx,px2+12,py-28,22,50,5); ctx.fill();
+  ctx.strokeStyle='#88888860'; ctx.lineWidth=1; ctx.stroke();
+  /* buttons on remote */
+  [0,1,2,3].forEach(i=>{ const bc=i===0&&n>=1?'#ffb300':'#333'; ctx.fillStyle=bc; ctx.beginPath(); ctx.arc(px2+23,py-20+i*12,3,0,Math.PI*2); ctx.fill(); });
+  /* IR LED at top of remote */
+  if(n>=1){
+    const ledGlow=Math.sin(Date.now()/40)*0.4+0.6;
+    ctx.fillStyle=`rgba(255,179,0,${0.8*ledGlow*Math.min(p,1)})`;
+    ctx.shadowColor='#ffb300'; ctx.shadowBlur=16;
+    ctx.beginPath(); ctx.arc(px2+23,py-32,4,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+  }
+  ctx.fillStyle='#8888aa'; ctx.font='10px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('Person',px2,py+38);
+  ctx.restore();
+  /* Flipper in the middle bottom (intercepting) */
+  devBox(ctx,W/2-50,H-80,100,55,'#00e676','📡','Flipper Zero','IR receiver');
+  /* Flipper screen */
+  ctx.save(); ctx.fillStyle='#060609'; rrect(ctx,W/2-42,H-73,84,35,3); ctx.fill();
+  ctx.fillStyle='#00e676'; ctx.font='9px Fira Code,monospace'; ctx.textAlign='left';
+  ctx.fillText('INFRARED',W/2-38,H-57); ctx.fillStyle='#4fc3f7';
+  ctx.fillText(n>=3?cmd.hex:n>=1?'38kHz':'standby',W/2-38,H-44);
+  ctx.restore();
+
+  /* STEP VISUALS */
+  if(n===0){ statusLabel(ctx,W,H,'📱 Remote ready — waiting for button press','#00e676'); }
+  if(n===1){/* IR beam from remote LED (narrow cone) */
+    const beamLen=(W-220-px2-30)*Math.min(p*1.2,1);
+    ctx.save(); ctx.fillStyle='rgba(255,179,0,0.06)';
+    ctx.beginPath(); ctx.moveTo(px2+23,py-32); ctx.lineTo(px2+30+beamLen,py-32-beamLen*.08); ctx.lineTo(px2+30+beamLen,py-32+beamLen*.08); ctx.closePath(); ctx.fill();
+    for(let i=0;i<10;i++){
+      const dx=px2+30+(beamLen*i/10); const dy=py-32+Math.sin(i*.5)*.5;
+      ctx.fillStyle=`rgba(255,179,0,${.5*(1-i/10)})`;
+      ctx.beginPath(); ctx.arc(dx,dy,2,0,Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+    statusLabel(ctx,W,H,'💡 IR LED flashing 38,000 times/sec with encoded data bits','#ffb300');
+  }
+  if(n===2){/* photon traveling */
+    const bx=px2+30+(W-220-px2-30)*p;
+    ctx.save();
+    ctx.fillStyle='rgba(255,179,0,0.9)'; ctx.shadowColor='#ffb300'; ctx.shadowBlur=10;
+    ctx.beginPath(); ctx.arc(bx,py-32,5,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+    for(let i=0;i<8;i++){const tx=px2+30+(bx-px2-30)*i/8; ctx.fillStyle=`rgba(255,179,0,${.2*(i/8)})`; ctx.beginPath(); ctx.arc(tx,py-32,2,0,Math.PI*2); ctx.fill();}
+    ctx.restore();
+    /* NEC waveform */
+    necBars(ctx,60,H/2+100,W-120,35,'#ffb300',cmd.bits,p);
+    ctx.save(); ctx.fillStyle='rgba(255,179,0,0.4)'; ctx.font='9px Fira Code,monospace'; ctx.textAlign='left';
+    ctx.fillText('NEC waveform — 9ms start + 32 data bits',60,H/2+115); ctx.restore();
+    statusLabel(ctx,W,H,'🌟 IR photons traveling at 300,000 km/s — cannot pass through walls','#ffb300');
+  }
+  if(n===3){/* signal from remote to flipper receiver */
+    sigLine(ctx,px2+30,py-32,W/2,H-52,p,'#00e676');
+    /* decoded output */
+    ctx.save(); ctx.globalAlpha=Math.min(p*2,1);
+    necBars(ctx,60,H/2+40,W-120,30,'#00e676',cmd.bits,1);
+    ctx.fillStyle='rgba(0,230,118,0.1)'; rrect(ctx,60,H/2+55,W-120,22,4); ctx.fill();
+    ctx.fillStyle='#00e676'; ctx.font='10px Fira Code,monospace'; ctx.textAlign='left';
+    ctx.fillText('Protocol: NEC  Address: 0x07  Command: '+cmd.hex,64,H/2+70);
+    ctx.globalAlpha=1; ctx.restore();
+    statusLabel(ctx,W,H,'📡 Flipper decoding NEC 32-bit signal — '+cmd.name+' '+cmd.hex,'#00e676');
+  }
+  if(n===4){/* flipper replaying to TV */
+    sigLine(ctx,W/2,H-52,W-190,irRxX>0?H/2+30:H/2+30,p,'#00e676');
+    if(p>.75){
+      ctx.save(); ctx.globalAlpha=(p-.75)/.25;
+      ctx.fillStyle='rgba(0,230,118,0.18)'; rrect(ctx,W-205,H/2-90,175,140,10); ctx.fill();
+      ctx.fillStyle='#00e676'; ctx.font='bold 13px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('✓ TV Responds!',W-115,H/2-10);
+      ctx.fillStyle='#4fc3f7'; ctx.font='11px Inter,sans-serif'; ctx.fillText(cmd.name+' executed',W-115,H/2+8);
+      ctx.globalAlpha=1; ctx.restore();
+    }
+    statusLabel(ctx,W,H,'🔁 Flipper replaying '+cmd.name+' at 38 kHz — TV responds','#00e676');
+  }
+}
+function irToggle(){
+  if(irPlay){cancelAnimationFrame(irRaf);irPlay=false;document.getElementById('ir-pb').textContent='▶ Play All Steps';return;}
+  irPlay=true; document.getElementById('ir-pb').textContent='⏸ Pause';
+  irStep_=0; irT=0; irUI(0);
+  function tick(){
+    if(!irPlay)return; irT+=0.009;
+    if(irT>=1){irT=0; if(irStep_<4){irStep_++; irUI(irStep_);}else{irPlay=false;document.getElementById('ir-pb').textContent='▶ Play All Steps';return;}}
+    irDraw(irStep_,eio(irT)); irRaf=requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ═══════════════════════════════════════
+   MODULE 4 — BAD USB
+═══════════════════════════════════════ */
+let buC=0,buRaf=null,buPlay=false,buT=0,buStep_=0;
+const buInfo=[
+  {t:'Step 1 — Plug in',d:'A person plugs Flipper Zero into a laptop via USB-C cable. The laptop immediately starts USB enumeration — it sends a signal asking the device to identify itself. Flipper answers: "I am a USB HID keyboard."'},
+  {t:'Step 2 — OS trusts the keyboard',d:'The USB HID (Human Interface Device) specification says keyboards are automatically trusted — no driver install, no admin password, no security popup. Windows, Linux, macOS all do this. The OS just adds a new input device silently.'},
+  {t:'Step 3 — Script runs',d:'Flipper reads the payload script from its SD card. The script uses Rubber Ducky Script — commands like DELAY 1000 (wait 1 second), GUI r (press Windows+R), STRING cmd (type "cmd"), ENTER (press Enter key).'},
+  {t:'Step 4 — Keys injected at 1000 cps',d:'Flipper starts injecting keystrokes at ~1000 characters per second — far faster than any human. It opens the Run dialog, types "cmd", presses Enter. A command prompt opens. More commands execute automatically.'},
+  {t:'Step 5 — Attack complete in 5 seconds',d:'The script finishes — Wi-Fi passwords extracted, system info collected, or whatever the script was programmed to do. Flipper can then be unplugged. The whole attack took less than 5 seconds. No trace is left.'}
+];
+const buTerm=[
+  [['[usb]  USB-C connected to laptop','ti'],['[enum] USB enumeration starting...','ti'],['[id]   VID:0x0483 PID:0x5740','ti']],
+  [['[hid]  Descriptor: USB HID keyboard','tok'],['[os]   Windows: new keyboard registered','tok'],['[warn] ⚠ Zero security warning shown','tw']],
+  [['[sd]   Reading /SD/badusb/payload.txt','ti'],['[load] 8 commands loaded successfully','tok'],['[wait] DELAY 1000ms — OS settling...','ti']],
+  [['[key]  Injecting @ 1000 chars/sec','tw'],['[key]  GUI r → Run dialog opened','tw'],['[key]  STRING cmd → ENTER → terminal open','tw']],
+  [['[run]  netsh wlan show profiles key=clear','te'],['[run]  systeminfo > C:\\temp\\out.txt','te'],['[done] Attack complete in 4.8 seconds ⚠','te']]
+];
+function buUI(n){
+  buC=n;
+  for(let i=0;i<5;i++){const p=document.getElementById('bu-s'+i);p.className='sp'+(i===n?' on':i<n?' dn':'');}
+  document.getElementById('bu-t').textContent=buInfo[n].t;
+  document.getElementById('bu-d').textContent=buInfo[n].d;
+  tClr('bu-term'); buTerm[n].forEach(([t,c],i)=>tAdd('bu-term','<span class="tp">[bu] </span>'+t,c,i*280));
+}
+function buStep(n,fromUser){
+  if(fromUser&&buPlay){cancelAnimationFrame(buRaf);buPlay=false;document.getElementById('bu-pb').textContent='▶ Play All Steps';}
+  buUI(n); buDraw(n,1);
+}
+function buDraw(n,p){
+  const c=cv('bu-cv'); if(!c)return;
+  const {ctx,W,H}=c; ctx.clearRect(0,0,W,H);
+  gridBg(ctx,W,H,'rgba(255,82,82,0.03)');
+  /* laptop in center */
+  const lx=W/2-90, ly=H/2-70;
+  ctx.save();
+  /* screen */
+  ctx.fillStyle='#0d0d1a'; rrect(ctx,lx,ly,180,120,8); ctx.fill();
+  ctx.strokeStyle='#4fc3f740'; ctx.lineWidth=1; ctx.stroke();
+  /* screen content changes by step */
+  ctx.fillStyle='#0a0a14'; rrect(ctx,lx+8,ly+8,164,95,4); ctx.fill();
+  if(n<=1){
+    ctx.fillStyle='#3a3a55'; ctx.font='12px Inter,sans-serif'; ctx.textAlign='center';
+    ctx.fillText('Windows 11',lx+90,ly+45); ctx.fillStyle='#555'; ctx.fillText('Victim PC — locked',lx+90,ly+62);
+  }
+  if(n===2){/* showing file on flipper SD */
+    ctx.fillStyle='#333'; ctx.font='9px Fira Code,monospace'; ctx.textAlign='left';
+    ['DELAY 1000','GUI r','STRING cmd','ENTER','STRING systeminfo','ENTER'].forEach((l,i)=>{ctx.fillStyle=i===0?'#4fc3f7':'#8888aa'; ctx.fillText(l,lx+14,ly+22+i*13);});
+  }
+  if(n===3){/* run dialog popped up */
+    ctx.fillStyle='#1a1a2e'; rrect(ctx,lx+20,ly+40,140,55,6); ctx.fill();
+    ctx.strokeStyle='#4fc3f730'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle='#8888aa'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='left'; ctx.fillText('Run',lx+28,ly+55);
+    const typed='cmd'.substring(0,Math.floor('cmd'.length*Math.min(p*3,1)));
+    ctx.fillStyle='#fff'; ctx.font='10px Fira Code,monospace'; ctx.fillText(typed+'▋',lx+28,ly+75);
+  }
+  if(n===4){/* terminal open */
+    ctx.fillStyle='#060609'; rrect(ctx,lx+8,ly+8,164,95,4); ctx.fill();
+    ctx.fillStyle='#ff5252'; ctx.font='9px Fira Code,monospace'; ctx.textAlign='left';
+    ['C:\\> netsh wlan show profiles','WiFi-Home   key=abcd1234','WiFi-Office key=pass@123','C:\\> systeminfo','Host: VICTIM-PC · Done'].forEach((l,i)=>{ ctx.fillStyle=i===0||i===3?'#ff5252':'rgba(255,82,82,0.6)'; ctx.fillText(l,lx+12,ly+22+i*16);});
+  }
+  /* laptop base */
+  ctx.fillStyle='#15152a'; rrect(ctx,lx-10,ly+120,200,12,3); ctx.fill();
+  ctx.strokeStyle='#33334a'; ctx.lineWidth=1; ctx.stroke();
+  /* laptop label */
+  ctx.fillStyle='#4fc3f7'; ctx.font='11px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('Victim Laptop',W/2,ly+148);
+  ctx.restore();
+
+  /* USB cable + Flipper */
+  const cableY=ly+130, flipperX=n>=1?lx-120:lx-90;
+  /* USB port on laptop */
+  ctx.save(); ctx.fillStyle='#33334a'; rrect(ctx,lx-6,cableY-5,16,10,2); ctx.fill(); ctx.strokeStyle='#555'; ctx.lineWidth=.5; ctx.stroke();
+  /* cable growing in step 0 */
+  const cableEnd=lx+(flipperX+75-lx)*Math.min(p*2+0.5,1);
+  ctx.strokeStyle='rgba(255,82,82,0.7)'; ctx.lineWidth=4; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(lx,cableY); ctx.lineTo(Math.min(cableEnd,lx),cableY); ctx.stroke();
+  ctx.restore();
+
+  /* Flipper device */
+  devBox(ctx,lx-170,H/2-45,100,90,'#ff5252','📱','Flipper Zero','Bad USB');
+  ctx.save();
+  ctx.fillStyle='#060609'; rrect(ctx,lx-162,H/2-36,70,45,4); ctx.fill();
+  ctx.fillStyle='#ff5252'; ctx.font='9px Fira Code,monospace'; ctx.textAlign='left';
+  ctx.fillText('BAD USB',lx-158,H/2-22); ctx.fillStyle='#4fc3f7';
+  ctx.fillText(n>=2?'payload.txt':n>=1?'HID kbd':'USB-C',lx-158,H/2-9);
+  ctx.fillStyle=n>=4?'#00e676':'#333'; ctx.fillText(n>=4?'DONE ✓':'...',lx-158,H/2+4);
+  ctx.restore();
+
+  /* STEP VISUALS */
+  if(n>=1&&n<=3){/* OS trust badge */
+    ctx.save(); ctx.globalAlpha=Math.min(p*2,1);
+    ctx.fillStyle='rgba(79,195,247,0.08)'; rrect(ctx,W/2-100,ly-50,200,36,8); ctx.fill();
+    ctx.strokeStyle='rgba(79,195,247,0.3)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle='#4fc3f7'; ctx.font='11px Inter,sans-serif'; ctx.textAlign='center';
+    ctx.fillText('⌨ HID Keyboard — Trusted — No Warning',W/2,ly-27);
+    ctx.globalAlpha=1; ctx.restore();
+  }
+  if(n===3){/* flying key characters */
+    const keys=['W','i','n','+','R','','c','m','d','','↵'];
+    keys.forEach((k,i)=>{
+      const kt=(p*1.3+i*.09)%1;
+      const kx=lx-70+(lx+50-lx+70)*kt;
+      const ky=H/2-10+Math.sin(kt*Math.PI)*-30;
+      ctx.save(); ctx.globalAlpha=Math.sin(kt*Math.PI);
+      ctx.fillStyle='#ff5252'; ctx.font='bold 13px Fira Code,monospace'; ctx.textAlign='center';
+      ctx.shadowColor='#ff5252'; ctx.shadowBlur=6; ctx.fillText(k,kx,ky); ctx.shadowBlur=0; ctx.restore();
+    });
+  }
+  const lbls=['Flipper plugged into laptop USB-C — enumeration begins','OS registers HID keyboard — zero warning shown to user','Payload script read from SD card — 8 commands ready','Keystrokes injected at 1000 cps — Run dialog opened','Attack done — Wi-Fi passwords and sysinfo extracted'];
+  statusLabel(ctx,W,H,lbls[n],'#ff5252');
+}
+function buToggle(){
+  if(buPlay){cancelAnimationFrame(buRaf);buPlay=false;document.getElementById('bu-pb').textContent='▶ Play All Steps';return;}
+  buPlay=true; document.getElementById('bu-pb').textContent='⏸ Pause';
+  buStep_=0; buT=0; buUI(0);
+  function tick(){
+    if(!buPlay)return; buT+=0.009;
+    if(buT>=1){buT=0; if(buStep_<4){buStep_++; buUI(buStep_);}else{buPlay=false;document.getElementById('bu-pb').textContent='▶ Play All Steps';return;}}
+    buDraw(buStep_,eio(buT)); buRaf=requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ═══════════════════════════════════════
+   MODULE 5 — BLUETOOTH BLE
+═══════════════════════════════════════ */
+let blC=0,blRaf=null,blPlay=false,blT=0,blStep_=0;
+const blInfo=[
+  {t:'Step 1 — BLE broadcast',d:'Every BLE device constantly broadcasts tiny advertisement packets every 20–1000ms on channels 37, 38, and 39 (2.4 GHz). The packet says: "I exist, my name is JBL Flip 6, I am an audio speaker, RSSI = -52 dBm."'},
+  {t:'Step 2 — Flipper scans',d:'Flipper switches its nRF52840 Bluetooth chip to scan mode. It listens on all three advertisement channels simultaneously. It records every packet it receives — device name, MAC address, signal strength (RSSI), and services.'},
+  {t:'Step 3 — Packet decoded',d:'Each BLE advertisement packet has a fixed structure: preamble (1 byte) + access address (4 bytes) + PDU header + payload + CRC. Flipper decodes the PDU to extract the device name and manufacturer data.'},
+  {t:'Step 4 — Devices found',d:'Flipper\'s screen shows all nearby BLE devices — coffee shop scenario: JBL speaker (-52 dBm = close), colleague\'s iPhone (-61 dBm = 3m away), Mi Band (-74 dBm = 8m), HP printer (-81 dBm = far). All publicly broadcast this info.'},
+  {t:'Step 5 — BLE spam attack',d:'Flipper sends hundreds of fake BLE packets per second, each pretending to be an Apple AirPods Pro or Apple TV. Nearby iPhones show repeated pop-ups: "AirPods Pro found — tap to connect." This cannot compromise the phone — it just annoys.'}
+];
+const blTerm=[
+  [['[ble]  Devices advertising @ 2.4 GHz','tok'],['[ch]   Using channels 37, 38, 39','ti'],['[pkt]  ADV_IND packets every ~100ms','ti']],
+  [['[scan] nRF52840 chip — scan mode ON','tok'],['[ch]   Monitoring all 3 adv channels','ti'],['[rx]   Receiving advertisement packets','ti']],
+  [['[pkt]  PDU type: ADV_IND (connectable)','ti'],['[mac]  AA:BB:CC:11:22:33 (randomized)','tok'],['[name] "JBL Flip 6"  RSSI: -52 dBm','tok']],
+  [['[scan] 4 devices found nearby:','ti'],['[1]    JBL Flip 6        -52 dBm ●●●●','tok'],['[2]    iPhone 15 Pro    -61 dBm ●●●','tok']],
+  [['[spam] Sending fake AirPods packets','tw'],['[pkt]  Spoofed MAC: random per packet','tw'],['[warn] ⚠ Nearby iPhones show popups','te']]
+];
+function blUI(n){
+  blC=n;
+  for(let i=0;i<5;i++){const p=document.getElementById('bl-s'+i);p.className='sp'+(i===n?' on':i<n?' dn':'');}
+  document.getElementById('bl-t').textContent=blInfo[n].t;
+  document.getElementById('bl-d').textContent=blInfo[n].d;
+  tClr('bl-term'); blTerm[n].forEach(([t,c],i)=>tAdd('bl-term','<span class="tp">[bl] </span>'+t,c,i*280));
+}
+function blStep(n,fromUser){
+  if(fromUser&&blPlay){cancelAnimationFrame(blRaf);blPlay=false;document.getElementById('bl-pb').textContent='▶ Play All Steps';}
+  blUI(n); blDraw(n,1);
+}
+function blDraw(n,p){
+  const c=cv('bl-cv'); if(!c)return;
+  const {ctx,W,H}=c; ctx.clearRect(0,0,W,H);
+  gridBg(ctx,W,H,'rgba(206,147,216,0.03)');
+  /* coffee shop scene — devices scattered around */
+  const devs=[
+    {x:W*.15,y:H*.2,em:'🎧',name:'JBL Flip 6',rssi:'-52',col:'#ce93d8'},
+    {x:W*.82,y:H*.18,em:'⌚',name:'Mi Band 7',rssi:'-74',col:'#ce93d8'},
+    {x:W*.78,y:H*.72,em:'📱',name:'iPhone 15',rssi:'-61',col:'#4fc3f7'},
+    {x:W*.18,y:H*.75,em:'🖨',name:'HP Printer',rssi:'-81',col:'#ce93d8'},
+    {x:W*.5,y:H*.15,em:'💻',name:'MacBook',rssi:'-68',col:'#ce93d8'}
+  ];
+  devs.forEach((d,i)=>{
+    ctx.save();
+    ctx.fillStyle=d.col+'18'; rrect(ctx,d.x-36,d.y-24,72,48,8); ctx.fill();
+    ctx.strokeStyle=d.col+'40'; ctx.lineWidth=.7; ctx.stroke();
+    ctx.font='18px serif'; ctx.textAlign='center'; ctx.fillText(d.em,d.x,d.y+6);
+    ctx.fillStyle=d.col; ctx.font='10px Inter,sans-serif'; ctx.fillText(d.name,d.x,d.y+24);
+    ctx.fillStyle=d.col+'80'; ctx.font='9px Fira Code,monospace'; ctx.fillText(d.rssi+' dBm',d.x,d.y+36);
+    ctx.restore();
+    /* BLE adv packets flying outward */
+    if(n>=0){
+      for(let r=20;r<80;r+=25){
+        const phase=(Date.now()/1500+i/5+r/80)%1;
+        ctx.save(); ctx.beginPath(); ctx.arc(d.x,d.y,r+phase*25,0,Math.PI*2);
+        ctx.strokeStyle=d.col+(Math.round(0.12*(1-phase)*255).toString(16).padStart(2,'0'));
+        ctx.lineWidth=.6; ctx.stroke(); ctx.restore();
+      }
+    }
+  });
+  /* Flipper in center */
+  devBox(ctx,W/2-52,H/2-40,104,80,'#00e676','📡','Flipper Zero','BLE scanner');
+  ctx.save(); ctx.fillStyle='#060609'; rrect(ctx,W/2-44,H/2-32,88,40,3); ctx.fill();
+  ctx.fillStyle='#00e676'; ctx.font='9px Fira Code,monospace'; ctx.textAlign='left';
+  ctx.fillText('BLE SCAN',W/2-40,H/2-18); ctx.fillStyle='#ce93d8';
+  ctx.fillText(n>=3?'4 found':n>=1?'scanning':'standby',W/2-40,H/2-5);
+  ctx.fillStyle=n>=4?'#ff5252':'#333'; ctx.fillText(n>=4?'SPAM ON':'',W/2-40,H/2+8); ctx.restore();
+
+  /* STEP-SPECIFIC */
+  if(n>=1&&n<=3){/* packets flying TO flipper */
+    devs.forEach((d,i)=>{
+      const dp=(p*.7+i*.2)%1;
+      const px2=d.x+(W/2-d.x)*dp, py=d.y+(H/2-d.y)*dp;
+      ctx.save(); ctx.fillStyle=`rgba(206,147,216,${.7*(1-dp)*p})`;
+      ctx.shadowColor='#ce93d8'; ctx.shadowBlur=4;
+      ctx.beginPath(); ctx.arc(px2,py,4,0,Math.PI*2); ctx.fill();
+      ctx.shadowBlur=0; ctx.restore();
+    });
+  }
+  if(n>=1){/* scanning glow on flipper */
+    ctx.save(); rings(ctx,W/2,H/2,'#00e676',4,Date.now()/1600,80); ctx.restore();
+  }
+  if(n>=3){/* device list overlay */
+    ctx.save(); ctx.fillStyle='rgba(5,5,15,0.9)'; rrect(ctx,W/2-105,H/2-95,210,80,10); ctx.fill();
+    ctx.strokeStyle='rgba(0,230,118,0.35)'; ctx.lineWidth=1; ctx.stroke();
+    const list=[['JBL Flip 6','−52','●●●●'],['iPhone 15','−61','●●●'],['Mi Band 7','−74','●●'],['HP Printer','−81','●']];
+    list.forEach(([name,rssi,bars],i)=>{
+      ctx.fillStyle='#00e676'; ctx.font='10px Fira Code,monospace'; ctx.textAlign='left'; ctx.fillText(name,W/2-98,H/2-74+i*18);
+      ctx.fillStyle='#8888aa'; ctx.textAlign='right'; ctx.fillText(rssi+' '+bars,W/2+100,H/2-74+i*18);
+    });
+    ctx.restore();
+  }
+  if(n>=4){/* spam packets to iPhone */
+    for(let i=0;i<6;i++){
+      const sp=(p*1.5+i*.17)%1;
+      const tx=W/2+(devs[2].x-W/2)*sp, ty=H/2+(devs[2].y-H/2)*sp;
+      ctx.save(); ctx.fillStyle=`rgba(255,82,82,${.8*(1-sp)})`;
+      ctx.shadowColor='#ff5252'; ctx.shadowBlur=6;
+      ctx.beginPath(); ctx.arc(tx,ty,5,0,Math.PI*2); ctx.fill();
+      ctx.shadowBlur=0; ctx.restore();
+    }
+    if(p>.45){
+      ctx.save(); ctx.globalAlpha=Math.min((p-.45)/.4,1);
+      ctx.fillStyle='rgba(255,82,82,0.12)'; rrect(ctx,devs[2].x-70,devs[2].y-68,140,60,12); ctx.fill();
+      ctx.strokeStyle='rgba(255,82,82,0.45)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.fillStyle='#ff5252'; ctx.font='600 10px Inter,sans-serif'; ctx.textAlign='center';
+      ctx.fillText('🎧 AirPods Pro found',devs[2].x,devs[2].y-42);
+      ctx.fillText('Tap to connect  [×]',devs[2].x,devs[2].y-24);
+      ctx.globalAlpha=1; ctx.restore();
+    }
+  }
+  const lbls=['All BLE devices broadcasting — anyone can see them','Flipper scanning 2.4 GHz — collecting all advertisements','Decoding ADV_IND packet structure — extracting device info','4 nearby devices found with name, MAC, and signal strength','Spam attack — iPhone gets repeated fake AirPods popups'];
+  statusLabel(ctx,W,H,lbls[n],'#ce93d8');
+}
+function blToggle(){
+  if(blPlay){cancelAnimationFrame(blRaf);blPlay=false;document.getElementById('bl-pb').textContent='▶ Play All Steps';return;}
+  blPlay=true; document.getElementById('bl-pb').textContent='⏸ Pause';
+  blStep_=0; blT=0; blUI(0);
+  function tick(){
+    if(!blPlay)return; blT+=0.009;
+    if(blT>=1){blT=0; if(blStep_<4){blStep_++; blUI(blStep_);}else{blPlay=false;document.getElementById('bl-pb').textContent='▶ Play All Steps';return;}}
+    blDraw(blStep_,eio(blT)); blRaf=requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ═══════════════════════════════════════
+   QUIZ
+═══════════════════════════════════════ */
+const QS=[
+  {q:'What frequency do most Indian and European garage door remotes use?',o:['2.4 GHz','433.92 MHz','13.56 MHz','900 MHz'],a:1,e:'Most cheap EU/India remotes use the 433 MHz ISM band — unlicensed and free to use without a government license.'},
+  {q:'Why do rolling codes defeat Sub-GHz replay attacks completely?',o:['They use stronger encryption','Each press sends a new one-time code — captured codes cannot be reused','They transmit on multiple frequencies','They require Bluetooth pairing to work'],a:1,e:'Rolling codes (KeeLoq) generate a fresh code on every button press. A captured code is already used up — replaying it triggers nothing.'},
+  {q:'How does a passive RFID card get electrical power?',o:['Built-in lithium battery','Solar panel on the card','Electromagnetic induction from the reader\'s field','USB charging port'],a:2,e:'Passive RFID cards have no battery. The reader emits a 125 kHz EM field — the card\'s copper coil harvests this energy via electromagnetic induction.'},
+  {q:'What makes EM4100 RFID key fobs (common in Indian apartments) easily cloneable?',o:['They use Wi-Fi to transmit','The UID is permanently fixed and completely unencrypted','They expire after 30 days','They use rolling codes like car remotes'],a:1,e:'EM4100 fobs broadcast a fixed, unencrypted UID. Anyone with a reader — including Flipper Zero — can capture it and copy it to a blank T5577 card (₹30).'},
+  {q:'IR TV remotes modulate their signal onto what carrier frequency?',o:['433 MHz','38 kHz','2.4 GHz','125 kHz'],a:1,e:'38 kHz was specifically chosen because sunlight (the main source of IR interference) is DC — constant — so 38 kHz pulses stand out clearly from background IR noise.'},
+  {q:'Why can IR signals NOT pass through walls or your hand?',o:['Walls block radio waves at 38 kHz','IR is a form of light (940nm) — it travels in straight lines, blocked by anything opaque','IR frequency is too low to penetrate walls','Walls absorb all electromagnetic signals below 1 GHz'],a:1,e:'Infrared is light at 940nm wavelength — same physics as visible light. It travels in perfectly straight lines and is blocked by any opaque object: walls, hands, furniture.'},
+  {q:'What does "HID" stand for in Bad USB / Rubber Ducky attacks?',o:['High Intensity Device','Human Interface Device','Hacking Injection Driver','Hardware ID Protocol'],a:1,e:'HID = Human Interface Device. The USB HID spec covers keyboards, mice, game controllers. The OS trusts ALL HID devices automatically — no driver install, no admin prompt.'},
+  {q:'A Bad USB attack script uses "GUI r" — what does this do on Windows?',o:['Opens Google Chrome browser','Presses Windows+R to open the Run dialog box','Restarts the computer immediately','Opens the right-click context menu'],a:1,e:'GUI r in Ducky Script means: hold the Windows/GUI key and press R. This opens the Windows Run dialog — the first step to open cmd.exe or PowerShell.'},
+  {q:'In Bluetooth scanning, what does RSSI of -52 dBm vs -90 dBm tell you?',o:['Data transfer speed','Encryption level of the device','Signal strength — -52 dBm is strong (close), -90 dBm is weak (far away)','Battery level of the Bluetooth device'],a:2,e:'RSSI = Received Signal Strength Indicator. -52 dBm = strong signal, device is close (0–3m). -90 dBm = weak signal, device is far (15m+). Used to estimate distance.'},
+  {q:'Which Indian law makes unauthorized wireless signal capture illegal?',o:['IT Act 2000 Section 43','IT Act 2000 Section 66','IPC Section 379 (theft)','Wireless Telegraphy Act 1933'],a:1,e:'IT Act 2000, Section 66 — unauthorized access to computer systems including wireless devices. Penalty: up to 3 years imprisonment + ₹5 lakh fine. Always get written permission before testing.'}
+];
+let qi=0,qs2=0,qAns=false;
+function loadQ(){
+  const q=QS[qi];
+  document.getElementById('qn').textContent=`Question ${qi+1} of ${QS.length}`;
+  document.getElementById('qbar').style.width=(qi/QS.length*100)+'%';
+  document.getElementById('qs').textContent='Score: '+qs2;
+  document.getElementById('qt').textContent=q.q;
+  const opts=document.getElementById('qopts'); opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div'); d.className='qo';
+    d.innerHTML=`<span class="ql">${'ABCD'[i]}</span>${o}`;
+    d.onclick=()=>{if(!qAns)ansQ(i,d);};
+    opts.appendChild(d);
+  });
+  document.getElementById('qexp').style.display='none';
+  document.getElementById('qnxt').style.display='none';
+  qAns=false;
+}
+function ansQ(i,el){
+  qAns=true; const q=QS[qi];
+  document.querySelectorAll('.qo')[q.a].classList.add('ok');
+  if(i===q.a)qs2++; else el.classList.add('no');
+  document.getElementById('qs').textContent='Score: '+qs2;
+  const ex=document.getElementById('qexp'); ex.textContent=q.e; ex.style.display='block';
+  document.getElementById('qnxt').style.display='inline-flex';
+}
+function nextQ(){
+  qi++; if(qi>=QS.length){doneQ();return;} loadQ();
+}
+function doneQ(){
+  document.getElementById('qcard').style.display='none';
+  document.getElementById('qdone').style.display='block';
+  const pct=qs2/QS.length;
+  document.getElementById('dscore').textContent=qs2+' / '+QS.length;
+  const emojis=['😅','🤔','👍','🎯','🏆'];
+  const msgs=['Keep studying — review every module and try again!','Getting there! Focus on the topics you got wrong.','Good work! Solid foundation in RF security.','Great score! You really understand how this works.','Perfect! You are ready for real security research.'];
+  document.getElementById('demoji').textContent=emojis[Math.min(Math.floor(pct*4.99),4)];
+  document.getElementById('dmsg').textContent=msgs[Math.min(Math.floor(pct*4.99),4)];
+}
+function restartQ(){qi=0;qs2=0;qAns=false;document.getElementById('qcard').style.display='block';document.getElementById('qdone').style.display='none';loadQ();}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+window.addEventListener('load',()=>{
+  /* Step 1: init all canvases FIRST (measures width once after page paint) */
+  initCanvases();
+  /* Step 2: draw initial state into each canvas */
+  sgStep(0,false); rfStep(0,false); irStep(0,false); buStep(0,false); blStep(0,false);
+  loadQ();
+  /* Step 3: on window resize, re-init canvases then redraw */
+  window.addEventListener('resize',()=>{
+    Object.keys(_cv).forEach(k=>delete _cv[k]);
+    initCanvases();
+    sgDraw(sgC,1); rfDraw(rfC,1); irDraw(irC,1); buDraw(buC,1); blDraw(blC,1);
+  },{passive:true});
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+});
+</script>
+</body>
+</html>

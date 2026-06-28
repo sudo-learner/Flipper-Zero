@@ -1,0 +1,6 @@
+title: "FlipperEdu — Flipper Zero Visual Signal Education"
+description: "Interactive educational website showing how Flipper Zero wireless modules work with live canvas signal animations. Built for cybersecurity students."
+url: ""
+baseurl: "/flipper-edu"
+author: "sudo.learner"
+plugins: []
