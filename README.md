@@ -2,7 +2,7 @@
 
 An interactive educational website that shows exactly how Flipper Zero wireless modules work — with live canvas signal animations for every step.
 
-**Live demo:** `https://YOUR-USERNAME.github.io/flipper-edu/`
+**Live demo:**  https://sudo-learner.github.io/Flipper-Zero/
 
 ---
 
